@@ -1,37 +1,33 @@
 # image 
-clc;
-clear;
-close all;
+Image procssing
+ing=imread('coins.png');
+imshow(ing)
 
-% Step 1: Read the Image
-img = imread('cluttered_image.jpg'); % Replace with your image filename
-figure, imshow(img);
-title('Original Image');
+Edge detection
+in_boundary edge(ing);
+imshow(im_boundary)
 
-% Step 2: Convert to HSV Color Space
-hsv_img = rgb2hsv(img);
-hue = hsv_img(:,:,1);
-sat = hsv_img(:,:,2);
-val = hsv_img(:,:,3);
+Filling gaps in the edges
+filled_ing-infill(im_boundary, 'holes');
+imshow(filled_ing)
 
-% Step 3: Create Mask for Blue Color
-blue_mask = (hue >= 0.55 & hue <= 0.75) & (sat > 0.4) & (val > 0.2);
+Removing all noise
+cleaned_ing-bwareaopen(filled_ing,100);
+imshow(cleaned_ing)
 
-% Step 4: Clean Up the Mask
-blue_mask_cleaned = imopen(blue_mask, strel('disk', 5));
-blue_mask_cleaned = imclose(blue_mask_cleaned, strel('disk', 5));
-blue_mask_cleaned = imfill(blue_mask_cleaned, 'holes');
+Labelling and counting of coins
+[L,num]=bwlabel(cleaned_ing);
+imshow(L);
+title(['Number of Coins:', num2str(num)]);
+12
+13
+14
+15
+disp([Number of coins detected: num2str(num)]);
 
-% Step 5: Label and Extract Object Properties
-labeled = bwlabel(blue_mask_cleaned);
-stats = regionprops(labeled, 'BoundingBox', 'Area');
-
-% Step 6: Show Final Results
-figure, imshow(img);
-title('Detected Blue Objects');
-hold on;
-for i = 1:length(stats)
-    if stats(i).Area > 300 % Minimum area threshold to filter noise
-        rectangle('Position', stats(i).BoundingBox, 'EdgeColor', 'cyan', 'LineWidth', 2);
-    end
-end
+Coins in RGB
+[L,num]-bwlabel(cleaned_ing);
+imshow(label2rgb(L));
+title(['Number of Coins:', num2str(num)]);
+16
+disp([Number of coins detected:num2str(num)]);
